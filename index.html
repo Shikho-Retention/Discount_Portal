@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Discount Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --brand-blue: #354894;
+            --brand-pink: #CF278D;
+            --brand-yellow: #EFAD1E;
+            --brand-red: #EE3D5E;
+            --bg-light: #F4F6FA;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Hind Siliguri', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .portal-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 540px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(53, 72, 148, 0.08);
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        /* Unique Vibrant Brand Banner Accent */
+        .portal-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, var(--brand-pink) 0%, var(--brand-red) 50%, var(--brand-yellow) 100%);
+        }
+
+        .portal-header {
+            background-color: var(--brand-blue);
+            padding: 40px 35px 35px 35px;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .portal-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .portal-header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .portal-body {
+            padding: 35px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--brand-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group label .required {
+            color: var(--brand-red);
+            margin-left: 3px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 15px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            outline: none;
+            font-family: inherit;
+            color: var(--text-dark);
+            background-color: #FAFAFA;
+            transition: all 0.25s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--brand-pink);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(207, 39, 141, 0.1);
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23354894'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 18px;
+            padding-right: 40px;
+        }
+
+        textarea.form-control {
+            resize: none;
+            min-height: 100px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--brand-blue) 0%, #25336a 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 16px rgba(53, 72, 148, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px rgba(53, 72, 148, 0.3);
+            background: linear-gradient(135deg, #25336a 0%, var(--brand-blue) 100%);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit:disabled {
+            background: #CBD5E1;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        /* Form Overlay States (Spinner and Success Panel) */
+        .status-layer {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ffffff;
+            z-index: 10;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+            border-radius: 24px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #F1F5F9;
+            border-top: 4px solid var(--brand-pink);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .success-icon {
+            width: 70px;
+            height: 70px;
+            background-color: rgba(207, 39, 141, 0.1);
+            color: var(--brand-pink);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .portal-container {
+                border-radius: 16px;
+            }
+            .portal-header, .portal-body {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portal-container">
+        <div id="statusLayer" class="status-layer">
+            <div id="spinner" class="spinner"></div>
+            <div id="successIcon" class="success-icon" style="display:none;">✓</div>
+            <h2 id="statusTitle" style="margin-bottom: 10px; font-weight: 700;">Processing Application...</h2>
+            <p id="statusMsg" style="color: var(--text-muted); font-size: 14px;"></p>
+        </div>
+
+        <div class="portal-header">
+            <h1>Special Discount Request</h1>
+            <p>Please accurately fill out the details below to complete your evaluation.</p>
+        </div>
+
+        <div class="portal-body">
+            <form id="discountForm">
+                
+                <div class="form-group">
+                    <label for="studentName">Student Name <span class="required">*</span></label>
+                    <input type="text" id="studentName" class="form-control" placeholder="Enter Full Name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="enrolledNumber">Enrolled / Admitted Number <span class="required">*</span></label>
+                    <input type="text" id="enrolledNumber" class="form-control" placeholder="Enter Enrollment ID or Contact Number" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="courseName">Course Name <span class="required">*</span></label>
+                    <select id="courseName" class="form-control" required>
+                        <option value="" disabled selected>Select an enrolled course</option>
+                        <option value="SSC 2026 Batch">SSC 2026 Batch</option>
+                        <option value="HSC 2026 Academic">HSC 2026 Academic</option>
+                        <option value="University Admission Prep">University Admission Prep</option>
+                        <option value="Skill Development Track">Skill Development Track</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmation">তুমি কি ডিসকাউন্ট পেতে চাও? <span class="required">*</span></label>
+                    <select id="confirmation" class="form-control" required>
+                        <option value="" disabled selected>একটি অপশন সিলেক্ট করো</option>
+                        <option value="হ্যাঁ, আমি ডিসকাউন্ট পেতে ইচ্ছুক">হ্যাঁ, আমি ডিসকাউন্ট পেতে ইচ্ছুক</option>
+                        <option value="না, আমার প্রয়োজন নেই">না, আমার প্রয়োজন নেই</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="remarks">যদি থাকে (Remarks)</label>
+                    <textarea id="remarks" class="form-control" placeholder="Write any additional background or specific considerations here..."></option></textarea>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-submit">
+                    Submit Application
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Paste your deployed Google Web App URL inside the quotes below
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx7N4-VV9c9-zUh6RQh9kAbTGrJFAEnWmtVJ9NKfQ5ZjizxSdWA8kY4lOhuphR1tKPE/exec";
+
+        document.getElementById('discountForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Stop standard redirect refresh
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const statusLayer = document.getElementById('statusLayer');
+            const spinner = document.getElementById('spinner');
+            const successIcon = document.getElementById('successIcon');
+            const statusTitle = document.getElementById('statusTitle');
+            const statusMsg = document.getElementById('statusMsg');
+
+            // Collect values securely
+            const payload = {
+                studentName: document.getElementById('studentName').value.trim(),
+                enrolledNumber: document.getElementById('enrolledNumber').value.trim(),
+                courseName: document.getElementById('courseName').value,
+                confirmation: document.getElementById('confirmation').value,
+                remarks: document.getElementById('remarks').value.trim()
+            };
+
+            // Trigger UI Loading state
+            submitBtn.disabled = true;
+            statusLayer.style.display = 'flex';
+            spinner.style.display = 'block';
+            successIcon.style.display = 'none';
+            statusTitle.innerText = "Submitting Data...";
+            statusMsg.innerText = "Encrypting parameters and syncing to Google Core Sheets.";
+
+            // Execute asynchronous fetch API to Apps Script
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Essential option for cross-origin Google Macro limits
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                // Since "no-cors" doesn't return full status indicators, 
+                // any execution path down this promise block confirms arrival.
+                spinner.style.display = 'none';
+                successIcon.style.display = 'flex';
+                statusTitle.innerText = "Submission Complete!";
+                statusTitle.style.color = "var(--brand-blue)";
+                statusMsg.innerHTML = "আপনার ডিসকাউন্ট আবেদনটি সফলভাবে জমা হয়েছে।<br>Our agents will contact you shortly.";
+                
+                // Clear out the form safely
+                document.getElementById('discountForm').reset();
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                spinner.style.display = 'none';
+                statusTitle.innerText = "Submission Problem";
+                statusTitle.style.color = "var(--brand-red)";
+                statusMsg.innerText = "Could not sync data. Please check your web layout script URLs.";
+                submitBtn.disabled = false;
+                
+                setTimeout(() => {
+                    statusLayer.style.display = 'none';
+                }, 4000);
+            });
+        });
+    </script>
+</body>
+</html>
